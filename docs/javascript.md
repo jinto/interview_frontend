@@ -42,56 +42,56 @@ document.getElementById("parent-list").addEventListener("click", function(e) {
 
 0. 컴포넌트 자신
 
-  기존 언어에서 일관성 있는 this 나 self 를 사용하던 것과는 달리, 자바스크립트에서는 this 가 상황에 따라 다른 객체를 가리킨다. 
+    기존 언어에서 일관성 있는 this 나 self 를 사용하던 것과는 달리, 자바스크립트에서는 this 가 상황에 따라 다른 객체를 가리킨다. 
 
-  아마도, 초기의 자바스크립트는 button 에 onclick 을 구현하는데 사용하기 위해 만들어졌을 것이다. (아니면, marque라던지) 이 경우 this 는 자연스럽게 button 을 가리키도록 구현했을 것이다.
+    아마도, 초기의 자바스크립트는 button 에 onclick 을 구현하는데 사용하기 위해 만들어졌을 것이다. (아니면, marque라던지) 이 경우 this 는 자연스럽게 button 을 가리키도록 구현했을 것이다.
 
-  ```
-  <button id="1" onClick="reply_click(this.id)">B1</button>
-  <button id="2" onClick="reply_click(this.id)">B2</button>
+    ```
+    <button id="1" onClick="reply_click(this.id)">B1</button>
+    <button id="2" onClick="reply_click(this.id)">B2</button>
  
-  <script>function reply_click(clicked_id) { alert(clicked_id); }</script>
-  ```
+    <script>function reply_click(clicked_id) { alert(clicked_id); }</script>
+    ```
 
-  원문에는 0번 용례가 없다. 하지만, 역사성을 설명하려면 필요하지 않을까.
+    원문에는 0번 용례가 없다. 하지만, 역사성을 설명하려면 필요하지 않을까.
 
 
 1. new 가 사용되면
 
-  그후에 객체기능을 넣으면서 function 을 new 로 호출하면 function 내부에서 this 는 (function 이 constructor이므로) function 내부에서 새로 생성된 객체를 가리켰을 것이다.
+    그후에 객체기능을 넣으면서 function 을 new 로 호출하면 function 내부에서 this 는 (function 이 constructor이므로) function 내부에서 새로 생성된 객체를 가리켰을 것이다.
 
-  ```
-  function ConstructorExample() {
+    ```
+    function ConstructorExample() {
       console.log(this);
       this.value = 10;
       console.log(this);
-  }
+    }
   
-  new ConstructorExample();
-  // -> {}
-  // -> { value: 10 }
-  ```
+    new ConstructorExample();
+    // -> {}
+    // -> { value: 10 }
+    ```
 
 2. apply, bind, call 을 사용하면
 
-그리고, 함수를 여기저기서 쓸 수 있게하려고 함수내부의 this 를 바꿔치는 기능을 제공한다.
+    그리고, 함수를 여기저기서 쓸 수 있게하려고 함수내부의 this 를 바꿔치는 기능을 제공한다.
 
-- bind 는 함수내의 this 가 특정한 객체를 가리키는 함수를 만들어준다.
-- call 은 첫번째 인자에 (함수내에서) this 가 가리킬 객체를 넘겨준다.
-- apply 는 call 하고 같은데, 뒤쪽에 인자들을 배열로 줘야한다.
+    - bind 는 함수내의 this 가 특정한 객체를 가리키는 함수를 만들어준다.
+    - call 은 첫번째 인자에 (함수내에서) this 가 가리킬 객체를 넘겨준다.
+    - apply 는 call 하고 같은데, 뒤쪽에 인자들을 배열로 줘야한다.
 
-```
-function fn() {
-    console.log(this);
-}
-var obj = {
-    value: 5
-};
-var boundFn = fn.bind(obj);
-boundFn();     // -> { value: 5 }
-fn.call(obj);  // -> { value: 5 }
-fn.apply(obj); // -> { value: 5 }
-```
+    ```
+    function fn() {
+        console.log(this);
+    }
+    var obj = {
+        value: 5
+    };
+    var boundFn = fn.bind(obj);
+    boundFn();     // -> { value: 5 }
+    fn.call(obj);  // -> { value: 5 }
+    fn.apply(obj); // -> { value: 5 }
+    ```
 
 3. 객체내의 함수를 호출하면
 
