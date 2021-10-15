@@ -45,7 +45,7 @@ document.getElementById("parent-list").addEventListener("click", function(e) {
 0. 컴포넌트 자신
 
 
-    아마도, 초기의 자바스크립트는 button 에 onclick 을 구현하기 위해 만들어졌을 것이다 (아니면, marque라던지). 이 경우 this 가 자연스럽게 button 을 가리키도록 구현하는 것이 자연스러웠을 것이다.
+    아마도, 초기의 자바스크립트는 button 에 onclick 을 구현하는 데에 가장 많이 사용되었을 것이다. (marque 였던 것 같기도 하다.) 이 경우 this 가 button 을 가리키도록 하는 것이 자연스러웠을 것이다.
 
     ```
     <button id="1" onClick="reply_click(this.id)">B1</button>
@@ -59,7 +59,7 @@ document.getElementById("parent-list").addEventListener("click", function(e) {
 
 1. 함수를 호출할 때 new 가 사용되는 경우
 
-    함수를 호출할 때 new 를 사용하면 function 내부의 this 는 새로 생성된 객체를 가리킨다.
+    이때 function 내부의 this 는 새로 생성된 객체를 가리킨다. (new 키워드의 동작에 대해서는 나중에 질문이 있을 것 같다.)
 
     ```
     function ConstructorExample() {
@@ -75,7 +75,7 @@ document.getElementById("parent-list").addEventListener("click", function(e) {
 
 2. apply, bind, call 을 사용하면
 
-    그리고, 함수를 여기저기서 쓸 수 있게하려고 함수내부의 this 를 바꿔치는 기능을 제공한다.
+    심지어 함수 내부의 this 를 원하는 대로 바꿀 수도 있다.
 
     - bind 는 함수내의 this 가 특정한 객체를 가리키는 함수를 만들어준다.
     - call 은 첫번째 인자에 (함수내에서) this 가 가리킬 객체를 넘겨준다.
@@ -94,91 +94,91 @@ document.getElementById("parent-list").addEventListener("click", function(e) {
     fn.apply(obj); // -> { value: 5 }
     ```
 
-3. 객체내의 함수를 호출하면
+3. 객체 내에 정의된 함수를 호출하면 
 
-함수내부에서 this 는 자기를 포함한 객체를 가리킨다. 
+    함수 내부의 this 는 자기를 포함한 객체를 가리킨다. 
 
-```
-var obj = {
-    value: 5,
-    printThis: function() {
-        console.log(this);
-    }
-};
-
-obj.printThis(); // -> { value: 5, printThis: ƒ }
-```
+    ```
+    var obj = {
+        value: 5,
+        printThis: function() {
+            console.log(this);
+        }
+    };
+    
+    obj.printThis(); // -> { value: 5, printThis: ƒ }
+    ```
 
 4. 그냥 함수를 호출한 경우에는
 
-이때는 최상위 객체가 된다. 즉, Window 가 된다. 만약 `use strict` 를 사용했다면, `undefined` 가 된다. (node 에서 실행해보면 `Object` 라는 녀석이 나온다. 검색해보면 `global namespace object` 라고 나온다.)
+    이때는 최상위 객체를 가리킨다. 브라우저에서는 Window 를 가리키고, 만약 `use strict` 를 사용했다면, `undefined` 가 된다. (node 에서 실행해보면 `Object` 라는 `global namespace object` 를 가리킨다.)
 
-적절해 보인다.
-
-```
-function fn() {
-    console.log(this);
-}
-fn(); // -> Window {stop: ƒ, open: ƒ, alert: ƒ, ...}
-```
+    ```
+    function fn() {
+        console.log(this);
+    }
+    fn(); // -> Window {stop: ƒ, open: ƒ, alert: ƒ, ...}
+    ```
 
 5. 여러 상황이 한꺼번에 벌어지면
 
-상위 규칙이 적용된다. 고 되어있는데, 아마도 1번이 제일 쎈것 같다. constructor 에 bind 해서 확인하면 될듯... 0번은 바꿀 방법이 아예 없을 것 같은데..?
+    상위 규칙이 적용된다. 고 되어있는데, 1번이 제일 쎄다. (0번은 바꿀 방법이 아예 없을 것 같은데..?)
+
 
 6. 화살표 함수 `() => {}`
 
-화살표 함수에서는 모든 규칙을 무시하고, 함수가 생성되는 시점의 this 로 고정된다. 즉, 함수 정의 바로 앞에서 `console.log(this)` 해보면 나오는 그녀석이 이 함수의 this 가 된다.
+    화살표 함수에서는 모든 규칙을 무시하고, 함수가 생성되는 시점의 this 로 고정된다. 즉, 함수 정의 바로 앞에서 `console.log(this)` 해보면 나오는 그녀석이 이 함수의 this 가 된다.
 
 
-```
-const obj = {
-    value: 'abc',
-    createArrowFn: function() {
-        return () => console.log(this);
-    }
-};
-const arrowFn = obj.createArrowFn();
-arrowFn(); // -> { value: 'abc', createArrowFn: ƒ }
-```
+    ```
+    const obj = {
+        value: 'abc',
+        createArrowFn: function() {
+            return () => console.log(this);
+        }
+    };
+    const arrowFn = obj.createArrowFn();
+    arrowFn(); // -> { value: 'abc', createArrowFn: ƒ }
+    ```
 
 7. 점을 안찍으면 4번룰이 적용된다.
 
-아래 예제가 좀 웃기는데, 원래 객체에 속해있던 메서드라고 해도, 새로운 이름으로 할당하면, 점을 안찍고 호출할 수 있고, 이 경우 this 는 Window 를 가리킨다.
+    아래 예제가 좀 웃기는데, 원래 객체에 속해있던 메서드라고 해도, 새로운 이름으로 할당하면, 점을 안찍고 호출할 수 있고, 이 경우 this 는 Window 를 가리킨다.
 
-```
-var obj = {
-    value: 'hi',
-    printThis: function() {
-        console.log(this);
-    }
-};
-var print = obj.printThis;
-obj.printThis(); // -> {value: "hi", printThis: ƒ}
-print(); // -> Window {stop: ƒ, open: ƒ, alert: ƒ, ...}
-```
+    ```
+    var obj = {
+        value: 'hi',
+        printThis: function() {
+            console.log(this);
+        }
+    };
+    var print = obj.printThis;
+    obj.printThis(); // -> {value: "hi", printThis: ƒ}
+    print(); // -> Window {stop: ƒ, open: ƒ, alert: ƒ, ...}
+    ```
 
 8. 여러 규칙이 한꺼번에
 
-```
-var obj1 = {
-    value: 'hi',
-    print: function() {
-        console.log(this);
-    },
-};
-var obj2 = { value: 17 };
-```
+    ```
+    var obj1 = {
+        value: 'hi',
+        print: function() {
+            console.log(this);
+        },
+    };
+    var obj2 = { value: 17 };
+    ```
 
-위와 같이 객체가 두개 있는 상황에서, 규칙 2, 3이 함께 있으면 2번이 적용된다.
+    위와 같이 객체가 두개 있는 상황에서, 규칙 2, 3이 함께 있으면 2번이 적용된다.
+    
+    `obj1.print.call(obj2); // -> { value: 17 }`
+    
+    생성자와 점이 같이 있으면, 생성자쪽이 적용된다.
 
-`obj1.print.call(obj2); // -> { value: 17 }`
-
-생성자와 점이 같이 있으면, 생성자쪽이 적용된다.
-
-`new obj1.print(); // -> {}`
+    `new obj1.print(); // -> {}`
 
 ### 추가자료
+
 - https://codeburst.io/the-simple-rules-to-this-in-javascript-35d97f31bde3 (너무 잘 설명되어있다. 사실 본문은 0번을 제외하면 이 링크를 공부한 결과이다.)
 - https://stackoverflow.com/a/3127440/1751946
 
