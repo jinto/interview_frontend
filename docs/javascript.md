@@ -40,11 +40,12 @@ document.getElementById("parent-list").addEventListener("click", function(e) {
 
 ## 자바스크립트에서 `this` 에 대해 설명하시오.
 
+기존 언어에서 일관성 있는 this 나 self 를 사용하던 것과는 달리, 자바스크립트에서는 this 가 상황에 따라 다른 객체를 가리킨다. 
+
 0. 컴포넌트 자신
 
-    기존 언어에서 일관성 있는 this 나 self 를 사용하던 것과는 달리, 자바스크립트에서는 this 가 상황에 따라 다른 객체를 가리킨다. 
 
-    아마도, 초기의 자바스크립트는 button 에 onclick 을 구현하는데 사용하기 위해 만들어졌을 것이다. (아니면, marque라던지) 이 경우 this 는 자연스럽게 button 을 가리키도록 구현했을 것이다.
+    아마도, 초기의 자바스크립트는 button 에 onclick 을 구현하기 위해 만들어졌을 것이다 (아니면, marque라던지). 이 경우 this 가 자연스럽게 button 을 가리키도록 구현하는 것이 자연스러웠을 것이다.
 
     ```
     <button id="1" onClick="reply_click(this.id)">B1</button>
@@ -53,12 +54,12 @@ document.getElementById("parent-list").addEventListener("click", function(e) {
     <script>function reply_click(clicked_id) { alert(clicked_id); }</script>
     ```
 
-    원문에는 0번 용례가 없다. 하지만, 역사성을 설명하려면 필요하지 않을까.
+    (원문에는 0번 용례가 없다. 하지만, 역사성을 설명하려면 필요하지 않을까.)
 
 
-1. new 가 사용되면
+1. 함수를 호출할 때 new 가 사용되는 경우
 
-    그후에 객체기능을 넣으면서 function 을 new 로 호출하면 function 내부에서 this 는 (function 이 constructor이므로) function 내부에서 새로 생성된 객체를 가리켰을 것이다.
+    함수를 호출할 때 new 를 사용하면 function 내부의 this 는 새로 생성된 객체를 가리킨다.
 
     ```
     function ConstructorExample() {
