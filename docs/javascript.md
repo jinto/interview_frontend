@@ -169,11 +169,11 @@ document.getElementById("parent-list").addEventListener("click", function(e) {
     var obj2 = { value: 17 };
     ```
 
-    위와 같이 객체가 두개 있는 상황에서, 규칙 2, 3이 함께 있으면 2번이 적용된다.
+    위와 같이 객체가 두개 있는 상황에서, 규칙 2, 3이 공존하면 2번이 적용된다.
     
     `obj1.print.call(obj2); // -> { value: 17 }`
     
-    생성자와 점이 같이 있으면, 생성자쪽이 적용된다.
+    규칙 1과 3 즉, 생성자와 점이 같이 있으면, 규칙 1인 생성자쪽이 적용된다.
 
     `new obj1.print(); // -> {}`
 
