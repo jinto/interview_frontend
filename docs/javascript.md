@@ -1,15 +1,17 @@
 # 프론트엔드 인터뷰 - 자바스크립트
 
-프론트엔드 인터뷰 핸드북 https://frontendinterviewhandbook.com/javascript-questions/ 을 보면서 한 문제씩 나름대로 공부하고 번역한다. (원문의 번역은 https://bit.ly/3aFXhGH 에 있다.) 공부해보니, 결국은 참고자료등에 있는 링크를 읽어야만 제대로 이해할 수 있었다.
+프론트엔드 인터뷰 핸드북 https://frontendinterviewhandbook.com/javascript-questions/ 을 보면서 한 문제씩 나름대로 공부하고 번역하고 있다. (원문의 번역은 https://bit.ly/3aFXhGH ) 
 
-## 이벤트 딜리게이션(delegation, 위임)은 무엇인가.
+공부해보니, 결국은 참고자료를 읽어야만 제대로 이해할 수 있다.
+
+## 이벤트 버블링을 이용한 딜리게이션(delegation, 위임)을 설명하세요.
 
 HTML 컴포넌트는 click 따위의 이벤트를 발생시키곤 한다. 이 이벤트를 해당 컴포넌트에서 처리하지 않으면, 이벤트 버블링(event bubbling)에 의해 자동으로 상위 컴포넌트로 전달된다. 
 
 이 특성을 이용해 하위 컴포넌트의 이벤트를 상위 컴포넌트에서 처리하는 것을 딜리게이션(위임)이라고 한다.
 
-* 어떤 div 아래에 button이 여러개 있을 때, 각각의 버튼마다 핸들러를 만들지 않고, div 에 하나만 만들어서 처리하면 메모리 사용 공간을 덜 차지한다는 장점이 있다.
-* 만약 ul 아래의 li 에서 발생하는 이벤트를 받고 있다면, li 들이 삭제되거나 추가되어도 핸들러를 해제하거나 새로 바인딩할 필요가 없어서 편리하다.
+* 어떤 div 아래에 button이 여러개 있을 때, 각각의 버튼마다 핸들러를 만들지 않고, div 에 하나만 만들면 메모리 사용 공간을 덜 차지한다는 장점이 있다.
+* 만약 ul 아래의 li 에서 발생하는 이벤트를 이런 식으로 처리한다면, li 들이 삭제되거나 추가되어도 핸들러를 해제하거나 새로 바인딩할 필요가 없어서 편리하다.
 
 ```
 <ul id="parent-list">
@@ -34,42 +36,41 @@ document.getElementById("parent-list").addEventListener("click", function(e) {
 
 - https://davidwalsh.name/event-delegate 
 - https://stackoverflow.com/questions/1687296/what-is-dom-event-delegation
-- 이것들도 번역하면 좋겠는데, 너무 길다.
 
 
 ## 자바스크립트에서 `this` 에 대해 설명하시오.
 
 0. 컴포넌트 자신
 
-기존 언어에서 일관성 있는 this 나 self 를 사용하던 것과는 달리, 자바스크립트에서는 this 가 상황에 따라 다른 객체를 가리킨다. 
+  기존 언어에서 일관성 있는 this 나 self 를 사용하던 것과는 달리, 자바스크립트에서는 this 가 상황에 따라 다른 객체를 가리킨다. 
 
-아마도, 초기의 자바스크립트는 button 에 onclick 을 구현하는데 사용하기 위해 만들어졌을 것이다. (아니면, marque라던지) 이 경우 this 는 자연스럽게 button 을 가리키도록 구현했을 것이다.
+  아마도, 초기의 자바스크립트는 button 에 onclick 을 구현하는데 사용하기 위해 만들어졌을 것이다. (아니면, marque라던지) 이 경우 this 는 자연스럽게 button 을 가리키도록 구현했을 것이다.
 
-```
-<button id="1" onClick="reply_click(this.id)">B1</button>
-<button id="2" onClick="reply_click(this.id)">B2</button>
+  ```
+  <button id="1" onClick="reply_click(this.id)">B1</button>
+  <button id="2" onClick="reply_click(this.id)">B2</button>
  
-<script>function reply_click(clicked_id) { alert(clicked_id); }</script>
-```
+  <script>function reply_click(clicked_id) { alert(clicked_id); }</script>
+  ```
 
-원문에는 0번 용례가 없다. 하지만, 역사성을 설명하려면 필요하지 않을까.
+  원문에는 0번 용례가 없다. 하지만, 역사성을 설명하려면 필요하지 않을까.
 
 
 1. new 가 사용되면
 
-그후에 객체기능을 넣으면서 function 을 new 로 호출하면 function 내부에서 this 는 (function 이 constructor이므로) function 내부에서 새로 생성된 객체를 가리켰을 것이다.
+  그후에 객체기능을 넣으면서 function 을 new 로 호출하면 function 내부에서 this 는 (function 이 constructor이므로) function 내부에서 새로 생성된 객체를 가리켰을 것이다.
 
-```
-function ConstructorExample() {
-    console.log(this);
-    this.value = 10;
-    console.log(this);
-}
-
-new ConstructorExample();
-// -> {}
-// -> { value: 10 }
-```
+  ```
+  function ConstructorExample() {
+      console.log(this);
+      this.value = 10;
+      console.log(this);
+  }
+  
+  new ConstructorExample();
+  // -> {}
+  // -> { value: 10 }
+  ```
 
 2. apply, bind, call 을 사용하면
 
